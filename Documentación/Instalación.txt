@@ -1,0 +1,12 @@
+################ INSTALACION ################
+
+ACTIVATOR:
+	1) Guardar la RUTA COMPLETA de la carpeta activator-1.3.12-minimal/bin/ y añadirla al PATH.
+	2) Añadir la RUTA COMPLETA de la carpeta de tu java JDK /bin y añadirla al PATH si no estaba ya añadida de antemano.
+	3) Acceder a la carpeta SaB mediante terminal
+	4) Ejecutar el comando activator
+	5) [Si es la primera vez que se trabaja con el proyecto] ejecutar el comando eclipse, una vez finalizadas las operaciones importar el proyecto desde eclipse
+	6) Ejecutar run para inicializar la aplicación.
+	7) Acceder mediante un navegador o por terminal a http://localhost:9000 (9000 por defecto)
+
+
