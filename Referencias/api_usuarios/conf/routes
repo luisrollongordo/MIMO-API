@@ -1,0 +1,24 @@
+# listar todos los usuarios
+GET   /usuarios       controllers.UserController.list
+
+# obtener datos de un usuario
+GET /usuario/:id      controllers.UserController.retrieve(id: Long)
+
+# crear un usuario
+POST /usuarios        controllers.UserController.create
+
+# borrar un usuario
+DELETE /usuario/:id   controllers.UserController.remove(id: Int)
+
+# actualizar un usuario
+PUT /usuario/:id      controllers.UserController.update(id: Int)
+
+
+
+
+
+GET     /                  controllers.HomeController.index
+GET     /count             controllers.CountController.count
+GET     /message           controllers.AsyncController.message
+
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -1,0 +1,6 @@
+@(usuario: Usuario)
+
+<usuario id="@usuario.getId()">
+	<nombre>@usuario.getNickname()</nombre>
+	<edad>@usuario.getEdad()</edad>
+</usuario>
