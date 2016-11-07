@@ -1,0 +1,22 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+#Operación de creación de un usuario
+POST		/users		controllers.UserController.create
+
+#Operación de obtener un usuario
+GET			/user/:id	controllers.UserController.retrieve(id: Int)
+
+#Operación de obtener listado de usuarios
+GET			/users		controllers.UserController.list
+
+#Operación de actualizar un usuario
+PUT			/user/:id	controllers.UserController.update(id: Int)
+
+#Operación de borrar un usuario
+DELETE		/user/:id	controllers.UserController.remove(id: Int)
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
