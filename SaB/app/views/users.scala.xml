@@ -1,7 +1,0 @@
-@(users: List[User])
-
-<users>
-@for(u <- users) {
-	@user(u)
-}
-</users>

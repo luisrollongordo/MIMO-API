@@ -1,6 +1,0 @@
-@(user: User)
-
-<user id="@user.getId()">
-	<name>@user.getName()</name>
-	<email>@user.getEmail()</email>
-</user>

@@ -11,6 +11,3 @@ libraryDependencies ++= Seq(
   cache,
   javaWs
 )
-enablePlugins(PlayEbean)
-libraryDependencies += evolutions
-libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.36"
