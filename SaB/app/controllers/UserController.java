@@ -34,11 +34,11 @@ public class UserController extends Controller {
 	@Inject
 	private CacheApi cache;
 
-	public Result retrieve(Long id) {
-		User user = cache.get("usuario-" + id);
+	public Result retrieveUser(Long id) {
+		User user = cache.get("user-" + id);
 		if (user == null) {
 			user = user.findById(id);
-			cache.set("usuario-" + id, user);
+			cache.set("user-" + id, user);
 		}
 
 		if (user == null) {
@@ -49,10 +49,10 @@ public class UserController extends Controller {
 			return ok(views.xml.user.render(user));
 		}
 		else if (request().accepts("application/json")) {
-			JsonNode node = cache.get("usuario-" + id + "-json");
+			JsonNode node = cache.get("user-" + id + "-json");
 			if (node == null) {
 				node = user.toJson();
-				cache.set("usuario-" + id + "-json", node, 60);
+				cache.set("user-" + id + "-json", node, 60);
 			}
 			return ok(node);
 		}
@@ -61,46 +61,27 @@ public class UserController extends Controller {
 	}
 
 	@Transactional
-	public Result create() {
+	public Result createUser() {
 		Form<User> f = formFactory.form(User.class).bindFromRequest();
+		Form<Password> p = formFactory.form(Password.class).bindFromRequest();
 
 		if (f.hasErrors()) {
 			return Results.badRequest(f.errorsAsJson());
 		}
-
-		Password pwd = new Password();
-		pwd.setPasswordHash(String.valueOf(System.currentTimeMillis()));
-		pwd.save();
+		if (p.hasErrors()) {
+			return Results.badRequest(p.errorsAsJson());
+		}
 
 		User usu = f.get();
+		Password ps = p.get();
 
-		usu.setPassword(pwd);
-		pwd.setUser(usu);
+		usu.setPassword(ps);
+		ps.setUser(usu);
 
 		usu.save();
-		pwd.save();
+		ps.save();
 
 		return Results.status(CREATED, usu.toJson());
-	}
-
-	public Result update(Integer id) {
-		// TODO
-		return ok();
-	}
-
-	public Result remove(Integer id) {
-		User usuario = User.findById(Long.valueOf(id));
-		if (usuario == null) {
-			return notFound();
-		}
-
-		if (usuario.delete()) {
-			cache.remove("usuario-" + id);
-			return ok();
-		}
-		else {
-			return internalServerError();
-		}
 	}
 
 }

@@ -1,13 +1,18 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.avaje.ebean.Model;
+import com.avaje.ebean.Model.Find;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import play.data.validation.Constraints.Required;
+import play.libs.Json;
 @Entity
 public class Product extends Model{
 
@@ -53,6 +58,22 @@ public class Product extends Model{
 	public void setUser(User user) {
 		this.user = user;
 	}
+	public JsonNode toJson(){
+		return Json.toJson(this);
+	}
+	private static final Find<Long,Product> find = new Find<Long,Product>(){};
+	public static Find<Long, Product> getFind() {
+		return find;
+	}
+	public static Product findById(Long id){
+		return find.byId(id);
+	}
+	public static List<Product> findByName(String name){
+		return find.where().eq("name", name).findList();
+	}
 	
+	public static List<Product> findPage(Integer page, Integer count){
+		return find.setFirstRow(page * count).setMaxRows(count).findList();
+	}
 	
 }

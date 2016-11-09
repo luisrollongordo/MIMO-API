@@ -1,5 +1,8 @@
 package models;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 
 import javax.persistence.Entity;
@@ -10,6 +13,7 @@ import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 import validators.PaswordValidator;
 
@@ -18,8 +22,9 @@ public class Password extends Model{
 
 	@Id
 	private Long id;
-	@ValidateWith(PaswordValidator.class)
-	private String passwordHash;
+	//@ValidateWith(PaswordValidator.class)
+	@Required
+	private byte[] passwordHash;
 	@CreatedTimestamp
 	private Timestamp upDate;	
 	@OneToOne (mappedBy = "password")
@@ -32,11 +37,13 @@ public class Password extends Model{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getPasswordHash() {
+	public byte[] getPasswordHash() {
 		return passwordHash;
 	}
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
+	public void setPasswordHash(String passwordHash) throws NoSuchAlgorithmException {
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		byte[] hash = digest.digest(passwordHash.getBytes(StandardCharsets.UTF_8));
+		this.passwordHash = hash;
 	}
 	public Timestamp getUpDate() {
 		return upDate;

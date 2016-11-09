@@ -5,7 +5,7 @@
 
 create table password (
   id                            bigint auto_increment not null,
-  password_hash                 varchar(255),
+  password_hash                 varbinary(255),
   up_date                       datetime(6) not null,
   constraint pk_password primary key (id)
 );

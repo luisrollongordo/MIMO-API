@@ -1,0 +1,6 @@
+@(products: List[Product])
+<products>
+@for(p <- products){
+@product(p)
+}
+</products>

@@ -19,8 +19,10 @@ public class User extends Model{
 	@Id
 	private Long id;
 	@Required
+	//@ValidateWith(UserNameValidator.class)
 	private String name;
 	@Required
+	//@ValidateWith(UserEmailValidator.class)
 	private String email;
 	@OneToOne (cascade = CascadeType.ALL)
 	private Password password;
@@ -40,34 +42,14 @@ public class User extends Model{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public static Find<Long, User> getFind() {
-		return find;
-	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	private static final Find<Long,User> find = new Find<Long,User>(){};
-	
-	public static User findById(Long id){
-		return find.byId(id);
-	}
-	public static List<User> findByEmail(String email){
-		return find.where().eq("email", email).findList();
-	}
-	
-	public static List<User> findPage(Integer page, Integer count){
-		return find.setFirstRow(page * count).setMaxRows(count).findList();
-	}
-	
 	public long getId() {
 		return id;
 	}
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public JsonNode toJson(){
-		return Json.toJson(this);
 	}
 	public Password getPassword() {
 		return password;
@@ -81,8 +63,23 @@ public class User extends Model{
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-
-
 	
+	public JsonNode toJson(){
+		return Json.toJson(this);
+	}
+	private static final Find<Long,User> find = new Find<Long,User>(){};
+	public static Find<Long, User> getFind() {
+		return find;
+	}
+	public static User findById(Long id){
+		return find.byId(id);
+	}
+	public static List<User> findByEmail(String email){
+		return find.where().eq("email", email).findList();
+	}
+	
+	public static List<User> findPage(Integer page, Integer count){
+		return find.setFirstRow(page * count).setMaxRows(count).findList();
+	}
 
 }
