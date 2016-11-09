@@ -4,4 +4,5 @@
 	<name>@product.getName()</name>
 	<amount>@product.getAmount()</amount>
 	<price>@product.getPrice()</price>
+	<owner>@product.getUser.getName()</owner>
 </product>

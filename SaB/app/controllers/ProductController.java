@@ -93,6 +93,7 @@ public class ProductController extends Controller {
 				return Results.badRequest(p.errorsAsJson());
 			}
 			Product product = p.get();
+			product.setUser(User.findById(userId));
 			product.save();
 			
 
