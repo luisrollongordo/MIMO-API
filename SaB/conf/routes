@@ -7,16 +7,19 @@ GET     /          controllers.HomeController.index
 GET /user/:id      controllers.UserController.retrieveUser(id: Long)
 
 # create a user
-POST /user        controllers.UserController.createUser
+POST /user/register        controllers.UserController.createUser
+
+# create a user
+GET /user/login/:email/:password        controllers.UserController.loginUser(email: String, password: String)
 
 #get all products
-GET /products      controllers.ProductController.retrieveProducts
+GET /products/:page/:count        controllers.ProductController.retrieveProducts(page: Int, count: Int)
 
 #get product by id
 GET /product/:id      controllers.ProductController.retrieveProduct(id: Long)
 
 # create a product
-POST /product/:userId         controllers.ProductController.createProduct(userId: Long)
+POST /product/register/:userId         controllers.ProductController.createProduct(userId: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

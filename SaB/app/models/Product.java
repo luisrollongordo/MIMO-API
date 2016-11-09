@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.avaje.ebean.Model;
-import com.avaje.ebean.Model.Find;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -60,6 +59,10 @@ public class Product extends Model{
 	}
 	public JsonNode toJson(){
 		return Json.toJson(this);
+	}
+	
+	public static JsonNode toJsonArray(List<Product> jsonArray){
+		return Json.toJson(jsonArray);
 	}
 	private static final Find<Long,Product> find = new Find<Long,Product>(){};
 	public static Find<Long, Product> getFind() {

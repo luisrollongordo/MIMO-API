@@ -81,5 +81,4 @@ public class User extends Model{
 	public static List<User> findPage(Integer page, Integer count){
 		return find.setFirstRow(page * count).setMaxRows(count).findList();
 	}
-
 }

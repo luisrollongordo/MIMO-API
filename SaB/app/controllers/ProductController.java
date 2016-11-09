@@ -31,34 +31,35 @@ public class ProductController extends Controller {
 	@Inject
 	private CacheApi cache;
 	
-	private List<Product> productList = new ArrayList<>();
 
-	 public Result retrieveProducts() {
-		 	response().setHeader("X-Product-Count", String.valueOf(productList.size()));
-		 	
-		 	if(request().accepts("application/xml")){
-				  Content content = views.xml.products.render(productList);
-				 return ok(content);
-			 }
-			 else if(request().accepts("application/json")){
-			 	ArrayNode arrayJSON = play.libs.Json.newArray();
-			 	
-			 	for(int i=0;i<productList.size();i++){
-			 		 Product product = productList.get(i);
-					 ObjectNode product_node = play.libs.Json.newObject();
-					 product_node.put("id", product.getId());
-					 product_node.put("name",product.getName());
-					 product_node.put("amount",product.getAmount());	
-					 product_node.put("price",product.getPrice());
-					 arrayJSON.add(product_node);
-				 }
-				 
-				 return ok(arrayJSON);
-			 }
+	 public Result retrieveProducts(Integer page, Integer count) {
+		 
+		 List<Product> productList = cache.get("productList");
+			if (productList ==null) {
+				productList = Product.findPage(page, count);
+				System.out.println(productList.get(0).getName());
+				cache.set("productList", productList);
+			}
 
-			 return Results.status(406);
-	    }
-	 
+			if (productList == null) {
+				return notFound();
+			}
+
+			if (request().accepts("application/xml")) {
+				return ok(views.xml.products.render(productList));
+			}
+			else if (request().accepts("application/json")) {
+				JsonNode node = cache.get("productList-json");
+				if (node == null) {
+					node = Product.toJsonArray(productList);
+					cache.set("productList-json", node, 60);
+				}
+				return ok(node);
+			}
+
+			return Results.status(406);
+		}	 
+
 		public Result retrieveProduct(Long id) {
 			Product product = cache.get("product-" + id);
 			if (product == null) {
@@ -88,9 +89,11 @@ public class ProductController extends Controller {
 		@Transactional
 		public Result createProduct(Long userId) {
 			Form<Product> p = formFactory.form(Product.class).bindFromRequest();
-			
 			if (p.hasErrors()) {
 				return Results.badRequest(p.errorsAsJson());
+			}
+			if (User.findById(userId) == null){
+				return Results.badRequest("User id dont exist");
 			}
 			Product product = p.get();
 			product.setUser(User.findById(userId));

@@ -13,6 +13,7 @@ import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import helpers.EncryptHelper;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.ValidateWith;
 import validators.PaswordValidator;
@@ -24,7 +25,7 @@ public class Password extends Model{
 	private Long id;
 	//@ValidateWith(PaswordValidator.class)
 	@Required
-	private byte[] passwordHash;
+	private String passwordHash;
 	@CreatedTimestamp
 	private Timestamp upDate;	
 	@OneToOne (mappedBy = "password")
@@ -37,13 +38,12 @@ public class Password extends Model{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public byte[] getPasswordHash() {
+	public String getPasswordHash() {
 		return passwordHash;
 	}
-	public void setPasswordHash(String passwordHash) throws NoSuchAlgorithmException {
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		byte[] hash = digest.digest(passwordHash.getBytes(StandardCharsets.UTF_8));
-		this.passwordHash = hash;
+	public void setPasswordHash(String passwordHash){
+
+		this.passwordHash = EncryptHelper.sha_encrypt(passwordHash);
 	}
 	public Timestamp getUpDate() {
 		return upDate;

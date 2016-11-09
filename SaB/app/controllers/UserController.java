@@ -2,6 +2,8 @@ package controllers;
 
 
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import helpers.EncryptHelper;
 import helpers.JsonHelper;
 import models.Password;
 import models.User;
@@ -73,15 +76,47 @@ public class UserController extends Controller {
 		}
 
 		User usu = f.get();
-		Password ps = p.get();
+		Password pass = p.get();
 
-		usu.setPassword(ps);
-		ps.setUser(usu);
+		usu.setPassword(pass);
+		pass.setUser(usu);
 
 		usu.save();
-		ps.save();
+		pass.save();
 
 		return Results.status(CREATED, usu.toJson());
+	}
+	
+	public Result loginUser(String email, String password)
+	{
+		
+		if (!User.findByEmail(email).isEmpty())
+		{
+			User user = User.findByEmail(email).get(0);
+			if (user.getPassword().getPasswordHash().equals(EncryptHelper.sha_encrypt(password)))
+			{
+				if (request().accepts("application/xml"))
+				{
+					return ok(views.xml.user.render(user));
+				}
+				else if (request().accepts("application/json"))
+				{
+					JsonNode node = cache.get("user-" + user.getId() + "-json");
+					if (node == null)
+					{
+						node = user.toJson();
+						cache.set("user-" + user.getId() + "-json", node, 60);
+					}
+					return ok(node);
+				}
+			}
+			else
+				return Results.badRequest("bad password");
+		}
+		else
+			return Results.badRequest("bad email");
+		
+		return Results.status(406);
 	}
 
 }
