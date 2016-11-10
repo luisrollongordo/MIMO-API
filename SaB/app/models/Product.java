@@ -2,8 +2,10 @@ package models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.avaje.ebean.Model;
@@ -26,6 +28,9 @@ public class Product extends Model{
 	@ManyToOne
 	@JsonIgnore
 	private User user;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Category> category;
 	
 	public Long getId() {
 		return id;
@@ -56,6 +61,13 @@ public class Product extends Model{
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Category> getCategory() {
+		return category;
+	}
+	public void setCategory(List<Category> category) {
+		this.category = category;
 	}
 	public JsonNode toJson(){
 		return Json.toJson(this);

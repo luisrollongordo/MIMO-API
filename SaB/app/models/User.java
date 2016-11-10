@@ -29,7 +29,6 @@ public class User extends Model{
 	@OneToMany (cascade = CascadeType.ALL, mappedBy = "user")
 	private List<Product> products;	
 
-
 	public String getName() {
 		return name;
 	}
