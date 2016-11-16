@@ -9,7 +9,7 @@ GET /user/:id      controllers.UserController.retrieveUser(id: Long)
 # create a user
 POST /user/register        controllers.UserController.createUser
 
-# create a user
+# check if a user is registered
 GET /user/login/:email/:password        controllers.UserController.loginUser(email: String, password: String)
 
 #get all products
